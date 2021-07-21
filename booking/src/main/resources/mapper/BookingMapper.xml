@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.bookingMapper">
+	<select id="selectBookingList" parameterType="String" resultType="sbt.booking.vo.Booking">
+		SELECT *
+		  FROM room_booking.booking
+	</select>
+
+	<select id="getAllBookingCount" resultType="Integer">
+		SELECT COUNT(*) FROM room_booking.booking
+	</select>
+	
+	<select id="selectCompanyList" parameterType="String" resultType="sbt.booking.vo.Master">
+		SELECT *
+		  FROM room_booking.master
+		 WHERE gubun = 'C'
+	</select>
+	
+	<select id="selectRoomList" parameterType="map" resultType="sbt.booking.vo.Master">
+		SELECT *
+		  FROM room_booking.master
+		 WHERE gubun = 'R'
+		   AND upper = #{seq}
+		 ORDER BY name
+	</select>
+	
+</mapper>
