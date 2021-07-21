@@ -29,6 +29,94 @@
         th{
         	text-align: center;
         }
+        
+        .ui-datepicker {
+			display: none;
+			margin-top: 5px;
+			background-color: #fff;
+			border: 1px solid #ddd;
+		}
+
+		.ui-datepicker .ui-datepicker-header {
+			position: relative;
+			height: 30px;
+			background-color: #f1f1f3;
+			font-size: 11px;
+			color: #777;
+			text-align: center;
+			line-height: 30px;
+			text-shadow: 0 1px 1px #fff;
+		}
+
+		.ui-datepicker .ui-datepicker-header select {
+			height: 20px;
+		}
+
+		.ui-datepicker .ui-datepicker-prev,
+		.ui-datepicker .ui-datepicker-next {
+			display: block;
+			position: absolute;
+			top: 0;
+			width: 30px;
+			height: 30px;
+		}
+
+		.ui-datepicker .ui-datepicker-prev .ui-icon,
+		.ui-datepicker .ui-datepicker-next .ui-icon {
+			overflow: hidden;
+			display: inline-block;
+			margin-top: 10px;
+			text-indent: 100%;
+			color: transparent;
+		}
+
+		.ui-datepicker .ui-datepicker-prev {
+			left: 0;
+		}
+
+		.ui-datepicker .ui-datepicker-prev .ui-icon {
+			background-position: -91px -12px;
+			background-repeat: no-repeat;
+			width: 5px;
+			height: 8px;
+		}
+
+		.ui-datepicker .ui-datepicker-next {
+			right: 0;
+		}
+
+		.ui-datepicker .ui-datepicker-next .ui-icon {
+			background-position: -91px 0px;
+			background-repeat: no-repeat;
+			width: 5px;
+			height: 8px;
+		}
+
+		.ui-datepicker .ui-datepicker-calendar {
+			border-collapse: separate;
+		}
+
+		.ui-datepicker .ui-datepicker-calendar th, .ui-datepicker .ui-datepicker-calendar td {
+			width: 25px;
+			height: 25px;
+			text-align: center;
+		}
+
+		.ui-datepicker .ui-datepicker-calendar a {
+			display: block;
+			height: 25px;
+			line-height: 25px;
+		}
+
+		.ui-datepicker .ui-state-highlight {
+			color: #01b3bd;
+			font-weight: bold;
+		}
+
+		.ui-datepicker .ui-state-active {
+			background-color: #01b3bd;
+			color: #fff;
+		}
     </style>
     
     <script type="text/javascript" src="js/jquery-3.5.1.js"></script>
@@ -108,12 +196,21 @@
     	function buildingSelect(){
     		var gubunJa = $("#building").val();
     		getRoomList(gubunJa);
+    		roomSelect();
+    		var selectedBuilding = document.getElementById("building"); 
+    		var buildingText = selectedBuilding.options[selectedBuilding.selectedIndex].text;
+    		$("#regiBuilding").val(buildingText);
+    		document.getElementById('regiBuilding').disabled = true;
     	}
     	
     	function roomSelect(){
     		var gubunJa = $("#meetingRoom").val();
     		getRoomInfoList(gubunJa);
     		drawGrid(gubunJa.substring(1));
+    		var selectedMeetingRoom = document.getElementById("meetingRoom"); 
+    		var meetingRoomText = selectedMeetingRoom.options[selectedMeetingRoom.selectedIndex].text;
+    		$("#regiRoom").val(meetingRoomText);
+    		document.getElementById('regiRoom').disabled = true;
     	}
     	
     	function drawGrid(roomSeq){
@@ -132,7 +229,7 @@
     							<thead>
     								<tr>
     									<th></th>
-    									<th colspan="2">09</th>
+    									<th colspan="2" style="width:10%">09</th>
     									<th colspan="2">10</th>
     									<th colspan="2">11</th>
     									<th colspan="2">12</th>
@@ -147,11 +244,11 @@
     		
     		var tableBodyHtml = `<tbody>`;
     		
-    		for (var i = 0; i < 5; i++){
-    			tableBodyHtml = tableBodyHtml + `<tr><td align=center>` + week[i+1] + `</td>`;
+    		for (var i = 1; i < 6; i++){
+    			tableBodyHtml = tableBodyHtml + `<tr><td align=center>` + week[i] + `</td>`;
     			for (var j = 8.5; j < 18; j){
     				if(j != 8.5){
-    					tableBodyHtml = tableBodyHtml + `<td value=` + String(i) + String(j) + `>  </td>`;
+    					tableBodyHtml = tableBodyHtml + `<td id = ` + String(i) + String(j) + ` style="width:5%">  </td>`;
     				}
     				j = j + 0.5;
     			}
@@ -159,6 +256,78 @@
     		}
     		tableBodyHtml = tableBodyHtml + `</tbody></table>`;
     		document.getElementById('grid').innerHTML = tableHeadHtml + tableBodyHtml;
+    		
+    		if (window.roomInfoData.length != 0){
+    			for (var l = 0; l < window.roomInfoData.length; l++){
+    				var stdate = window.roomInfoData[l].stdate;
+            		console.log(stdate);
+            		
+            		var mYear = stdate.substring(0,4);
+            		var mMon = stdate.substring(4,6);
+            		var mDay = stdate.substring(6,8);
+            		
+            		console.log(mYear);
+            		console.log(mMon);
+            		console.log(mDay);
+            		
+            		var test = new Date(mYear, mMon-1, mDay);
+            		var ddday = test.getDay();
+            		console.log(test);
+            		console.log(ddday);
+            		
+            		var sttimetemp =  window.roomInfoData[l].sttime;
+            		var edtimetemp =  window.roomInfoData[l].edtime;
+            		console.log(sttimetemp);
+            		console.log(edtimetemp);
+            		var sttt1 = sttimetemp.split(':')[0];
+            		var edtt1 = edtimetemp.split(':')[0];
+            		console.log(sttt1);
+            		console.log(edtt1);
+            		var sttt2 = sttimetemp.split(':')[1];
+            		var edtt2 = edtimetemp.split(':')[1];
+            		console.log(sttt2);
+            		console.log(edtt2);
+            		
+            		if (sttt2 == 30){
+            			sttt2 = 0.5;
+            		} else {
+            			sttt2 = 0;
+            		}
+            		
+            		if (edtt2 == 30){
+            			edtt2 = 0.5;
+            		} else {
+            			edtt2 = 0;
+            		}
+            		
+            		console.log(sttt2);
+            		
+            		var stttime = parseInt(sttt1) + sttt2;
+            		console.log(stttime);
+            		var edttime = parseInt(edtt1) + edtt2;
+            		
+            		var stnum = 0;
+            		for (var i = 9; i < 18; i){
+            			console.log(ddday + sttt1 + sttt2);
+            			var con = String(ddday) + i;
+            			if ( con.substring(1) >= stttime && con.substring(1) < edttime) {
+            				console.log(String(ddday) + i);
+            				if (stnum == 0){
+            					document.getElementById(String(ddday) + i).style.backgroundColor="yellow";
+            					document.getElementById(String(ddday) + i).style.fontSize="6pt";
+            					document.getElementById(String(ddday) + i).innerText = window.roomInfoData[l].booking_human;
+            				} else {
+                				document.getElementById(String(ddday) + i).style.backgroundColor="yellow";	
+            				}
+            				stnum = stnum + 1;
+            				
+            			}
+            			i = i + 0.5;
+            		}
+    			}
+    			
+    		}
+    		
     		
     	}
   
@@ -178,8 +347,6 @@
                         <div class="p-5">
                             <div class="text-left" style="float:left">
                                 <h1 class="h4 text-gray-900 mb-4">회의실 예약</h1>
-                                
-                                
                             </div>
                             
                             <div class="data_set" style="float:right" id="roomSelect">
@@ -195,15 +362,72 @@
                                 	onChange="buildingSelect()">
                                 </select>
                             </div>
+
+							
                         </div>
                         
                         <hr>
                         
                         <div class="p-5">
-                        	<div id = grid>
+                        	<div id = "grid">
                         		여기다가 그리드
                         	</div>
-                        
+                        </div>
+
+						<hr>
+
+						
+
+						<div class="p-5" id = "bookingForm" style="margin-top: -2%;">
+                        	<form class="user">
+                                <div class="form-group row">
+                                	<div class="col-sm-2">
+                                		건물
+                                	</div>
+                                    <div class="col-sm-2 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" id="regiBuilding">
+                                    </div>
+                                    <div class="col-sm-2">
+                                    	회의실
+                                	</div>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control form-control-user" id="regiRoom">
+                                    </div>
+                                    <div class="col-sm-2">
+                                    	예약자
+                                	</div>
+									<div class="col-sm-2">
+                                        <input type="text" class="form-control form-control-user" id="regiHuman">
+                                    </div>
+                                </div>
+								<div class="form-group row">
+                                    <div class="col-sm-4 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" id="regiDate" placeholder="회의 날짜">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-user" id="regiSTTime" placeholder="회의 시작 시간">
+                                        <span class="date_picker">
+                                            <label for="date_from" class="label" style="margin-right: -1px; margin-left: 10px;">기간</label>
+                                            <span class="input_date"><input type="text" class="input_text" id="date_from"></span>
+                                        </span>
+                                    </div>
+									<div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-user" id="regiEDTime" placeholder="회의 종료 시간">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" id="regiSubject" placeholder="주제">
+                                </div>
+								<div class="form-group">
+                                    <input type="text" class="form-control form-control-user" id="regiParticipant" placeholder="참여자">
+                                </div>
+                                
+                                
+                                <hr>
+								<a href="login.html" class="btn btn-primary btn-user btn-block">
+                                    등록
+                                </a>
+                            </form>
                         </div>
                         
                     </div>
@@ -211,10 +435,12 @@
             </div>
         </div>
 
+
     </div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="js/ui-common.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
