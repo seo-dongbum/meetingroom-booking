@@ -23,6 +23,6 @@ public class BookingService {
 	}
 	
 	public List<Booking> getRoomInfoList(String roomInfo) throws Exception {
-		return bookingDao.getRoomInfoList(roomInfo);
+		return bookingDao.getRoomInfoList(roomInfo.substring(1));
 	}
 }

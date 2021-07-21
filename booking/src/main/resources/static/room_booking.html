@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
 
@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Register</title>
+    <title>SBT 회의실 예약</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -19,6 +19,150 @@
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    
+    <style>
+    	.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        
+        th{
+        	text-align: center;
+        }
+    </style>
+    
+    <script type="text/javascript" src="js/jquery-3.5.1.js"></script>
+    <script>
+    	$(document).ready(function () {
+	        console.log("popup~");
+	        getCompanyList();
+	        buildingSelect();
+	        roomSelect();
+		});
+    	
+    	function getCompanyList() {
+
+            $.ajax({
+                url: "/getCompanyList",
+                method: 'POST',
+                dataType: 'json',
+                async: false,
+                success: function (responseData) {
+                    window.companyData = responseData;
+                    var optionHtml = ``;
+                    
+                    for (var i = 0; i < window.companyData.length; i++){
+                    	optionHtml = optionHtml + `<option value=` + window.companyData[i].gubun + window.companyData[i].seq + `> ` + window.companyData[i].name + `</option>`;
+                    }
+                    document.getElementById('building').innerHTML = optionHtml;
+                },
+                error: function () {
+                    alert('건물 정보 조회 실패');
+                }
+            });
+    	}
+    	
+    	function getRoomList(gubunJa) {
+
+            $.ajax({
+                url: "/getRoomList/" + gubunJa,
+                method: 'GET',
+                dataType: 'json',
+                async: false,
+                success: function (responseData) {
+                    window.roomData = responseData;
+                    var optionHtml = ``;
+                    
+                    for (var i = 0; i < window.roomData.length; i++){
+                    	optionHtml = optionHtml + `<option value=` + window.roomData[i].gubun + window.roomData[i].seq + `> ` + window.roomData[i].name + `</option>`;
+                    }
+                    document.getElementById('meetingRoom').innerHTML = optionHtml;
+                },
+                error: function () {
+                    alert('회의실 정보 조회 실패');
+                }
+            });
+    	}
+    	
+    	function getRoomInfoList(gubunJa) {
+
+            $.ajax({
+                url: "/getRoomInfoList/" + gubunJa,
+                method: 'GET',
+                dataType: 'json',
+                async: false,
+                success: function (responseData) {
+                    window.roomInfoData = responseData;
+                    
+                    for (var i = 0; i < window.roomInfoData.length; i++){
+                    	console.log(window.roomInfoData[i]);
+                    }
+                    
+                },
+                error: function () {
+                    alert('회의실 예약 정보 조회 실패');
+                }
+            });
+    	}
+    	
+    	function buildingSelect(){
+    		var gubunJa = $("#building").val();
+    		getRoomList(gubunJa);
+    	}
+    	
+    	function roomSelect(){
+    		var gubunJa = $("#meetingRoom").val();
+    		getRoomInfoList(gubunJa);
+    		drawGrid(gubunJa.substring(1));
+    	}
+    	
+    	function drawGrid(roomSeq){
+    		var week = new Array("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT");
+    		var date = new Date();
+    		console.log(date);
+    		var month = date.getMonth()+1;
+    		var day = date.getDate();
+    		var dayName = week[date.getDay()];
+    		
+    		console.log(month);
+    		console.log(day);
+    		console.log(dayName);
+    		
+    		var tableHeadHtml = `<table id = "roomGrid" border=1 style="width:100%;">
+    							<thead>
+    								<tr>
+    									<th></th>
+    									<th colspan="2">09</th>
+    									<th colspan="2">10</th>
+    									<th colspan="2">11</th>
+    									<th colspan="2">12</th>
+    									<th colspan="2">13</th>
+    									<th colspan="2">14</th>
+    									<th colspan="2">15</th>
+    									<th colspan="2">16</th>
+    									<th colspan="2">17</th>
+    								</tr>
+    							</thead>
+    						`;
+    		
+    		var tableBodyHtml = `<tbody>`;
+    		
+    		for (var i = 0; i < 5; i++){
+    			tableBodyHtml = tableBodyHtml + `<tr><td align=center>` + week[i+1] + `</td>`;
+    			for (var j = 8.5; j < 18; j){
+    				if(j != 8.5){
+    					tableBodyHtml = tableBodyHtml + `<td value=` + String(i) + String(j) + `>  </td>`;
+    				}
+    				j = j + 0.5;
+    			}
+    			tableBodyHtml = tableBodyHtml + `</tr>`;
+    		}
+    		tableBodyHtml = tableBodyHtml + `</tbody></table>`;
+    		document.getElementById('grid').innerHTML = tableHeadHtml + tableBodyHtml;
+    		
+    	}
+  
+    </script>
 
 </head>
 
@@ -30,56 +174,38 @@
             <div class="card-body p-0">
                 <!-- Nested Row within Card Body -->
                 <div class="row">
-                    <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-12">
                         <div class="p-5">
-                            <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                            <div class="text-left" style="float:left">
+                                <h1 class="h4 text-gray-900 mb-4">회의실 예약</h1>
+                                
+                                
                             </div>
-                            <form class="user">
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            placeholder="First Name">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                            placeholder="Last Name">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                        placeholder="Email Address">
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Password">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Repeat Password">
-                                    </div>
-                                </div>
-                                <a href="login.html" class="btn btn-primary btn-user btn-block">
-                                    Register Account
-                                </a>
-                                <hr>
-                                <a href="index.html" class="btn btn-google btn-user btn-block">
-                                    <i class="fab fa-google fa-fw"></i> Register with Google
-                                </a>
-                                <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                    <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
-                                </a>
-                            </form>
-                            <hr>
-                            <div class="text-center">
-                                <a class="small" href="forgot-password.html">Forgot Password?</a>
+                            
+                            <div class="data_set" style="float:right" id="roomSelect">
+                                <a style="margin-right: 10px; margin-left: 10px;">회의실 선택</a>
+                                <select name="meetingRoom" id="meetingRoom" class="select" style="width:120px;"
+                                    onChange="roomSelect()">
+                                </select>
                             </div>
-                            <div class="text-center">
-                                <a class="small" href="login.html">Already have an account? Login!</a>
+
+                            <div class="data_set" style="float:right" id="buildingSelect">
+                                <a style="margin-right: 10px; margin-left: 10px;">건물 선택</a>
+                                <select name="building" id="building" class="select" style="width:120px;"
+                                	onChange="buildingSelect()">
+                                </select>
                             </div>
                         </div>
+                        
+                        <hr>
+                        
+                        <div class="p-5">
+                        	<div id = grid>
+                        		여기다가 그리드
+                        	</div>
+                        
+                        </div>
+                        
                     </div>
                 </div>
             </div>

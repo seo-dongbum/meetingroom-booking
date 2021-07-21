@@ -25,6 +25,6 @@ public class BookingDao {
 	}
 	
 	public List<Booking> getRoomInfoList(String roomInfo) throws Exception{
-		return sqlSession.selectList("mapper.bookingMapper.selectRoomLInfoist", roomInfo);
+		return sqlSession.selectList("mapper.bookingMapper.selectRoomLInfoList", roomInfo);
 	}
 }

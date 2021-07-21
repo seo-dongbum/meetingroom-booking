@@ -25,4 +25,11 @@
 		 ORDER BY name
 	</select>
 	
+	<select id="selectRoomLInfoList" parameterType="map" resultType="sbt.booking.vo.Booking">
+		SELECT *
+		  FROM room_booking.booking
+		 WHERE room_seq = #{roomInfo}
+		 ORDER BY seq
+	</select>
+	
 </mapper>
