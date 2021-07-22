@@ -25,8 +25,12 @@
     </style>
     
     <script>
-	    function openPop() {
+	    function openBookingPop() {
 			window.open("room_booking.html", "회의실 예약", "width=1400, height=800");
+	    }
+
+        function openAdminPop() {
+			window.open("booking_admin.html", "예약 관리", "width=1400, height=800");
 	    }
     
     </script>
@@ -93,8 +97,8 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">메뉴</h6>
                         <a class="collapse-item" href="login.html">회의실 현황</a>
-                        <a class="collapse-item" href="javascript:openPop()">회의실 예약</a>
-                        <a class="collapse-item" href="forgot-password.html">나의 예약</a>
+                        <a class="collapse-item" href="javascript:openBookingPop()">회의실 예약</a>
+                        <a class="collapse-item" href="javascript:openAdminPop()">나의 예약</a>
                         <div class="collapse-divider"></div>
                     </div>
                 </div>

@@ -29,14 +29,53 @@
         th{
         	text-align: center;
         }
-        
-        .ui-datepicker {
+
+		.input_date {
+			display: inline-block;
+			height: 34px;
+			border: 1px solid #c9ccd2;
+			background-color: #fff;
+			-webkit-border-radius: 4px;
+					border-radius: 4px;
+			vertical-align: top;
+			line-height: 34px;
+			-webkit-box-sizing: border-box;
+					box-sizing: border-box;
+		}
+
+		.input_date input {
+			width: 100px;
+			border: 0;
+			height: 100%;
+		}
+
+		.input_date input:focus {
+			border: 0;
+		}
+
+		.input_date .ui-datepicker-trigger {
+			margin: 1px 3px 0 5px;
+		}
+
+		.ui-datepicker .ui-datepicker-prev .ui-icon, .ui-datepicker .ui-datepicker-next .ui-icon, .page_error .error_box:before {
+			background-image: url(../img/sp_auto-ml.png);
+			-webkit-background-size: 96px 82px;
+			        background-size: 96px 82px;
+			background-repeat: no-repeat;
+		}
+		
+		.date_picker {
+			display: inline-block;
+			vertical-align: top;
+		}
+		
+		.ui-datepicker {
 			display: none;
 			margin-top: 5px;
 			background-color: #fff;
 			border: 1px solid #ddd;
 		}
-
+		
 		.ui-datepicker .ui-datepicker-header {
 			position: relative;
 			height: 30px;
@@ -47,11 +86,11 @@
 			line-height: 30px;
 			text-shadow: 0 1px 1px #fff;
 		}
-
+		
 		.ui-datepicker .ui-datepicker-header select {
 			height: 20px;
 		}
-
+		
 		.ui-datepicker .ui-datepicker-prev,
 		.ui-datepicker .ui-datepicker-next {
 			display: block;
@@ -60,7 +99,7 @@
 			width: 30px;
 			height: 30px;
 		}
-
+		
 		.ui-datepicker .ui-datepicker-prev .ui-icon,
 		.ui-datepicker .ui-datepicker-next .ui-icon {
 			overflow: hidden;
@@ -69,50 +108,50 @@
 			text-indent: 100%;
 			color: transparent;
 		}
-
+		
 		.ui-datepicker .ui-datepicker-prev {
 			left: 0;
 		}
-
+		
 		.ui-datepicker .ui-datepicker-prev .ui-icon {
 			background-position: -91px -12px;
 			background-repeat: no-repeat;
 			width: 5px;
 			height: 8px;
 		}
-
+		
 		.ui-datepicker .ui-datepicker-next {
 			right: 0;
 		}
-
+		
 		.ui-datepicker .ui-datepicker-next .ui-icon {
 			background-position: -91px 0px;
 			background-repeat: no-repeat;
 			width: 5px;
 			height: 8px;
 		}
-
+		
 		.ui-datepicker .ui-datepicker-calendar {
 			border-collapse: separate;
 		}
-
+		
 		.ui-datepicker .ui-datepicker-calendar th, .ui-datepicker .ui-datepicker-calendar td {
 			width: 25px;
 			height: 25px;
 			text-align: center;
 		}
-
+		
 		.ui-datepicker .ui-datepicker-calendar a {
 			display: block;
 			height: 25px;
 			line-height: 25px;
 		}
-
+		
 		.ui-datepicker .ui-state-highlight {
 			color: #01b3bd;
 			font-weight: bold;
 		}
-
+		
 		.ui-datepicker .ui-state-active {
 			background-color: #01b3bd;
 			color: #fff;
@@ -120,9 +159,11 @@
     </style>
     
     <script type="text/javascript" src="js/jquery-3.5.1.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="js/ui-common.js"></script>
     <script>
     	$(document).ready(function () {
-	        console.log("popup~");
+	        console.log("booking popup~");
 	        getCompanyList();
 	        buildingSelect();
 	        roomSelect();
@@ -163,6 +204,7 @@
                     
                     for (var i = 0; i < window.roomData.length; i++){
                     	optionHtml = optionHtml + `<option value=` + window.roomData[i].gubun + window.roomData[i].seq + `> ` + window.roomData[i].name + `</option>`;
+                    	console.log(window.roomData[i].seq);
                     }
                     document.getElementById('meetingRoom').innerHTML = optionHtml;
                 },
@@ -199,8 +241,8 @@
     		roomSelect();
     		var selectedBuilding = document.getElementById("building"); 
     		var buildingText = selectedBuilding.options[selectedBuilding.selectedIndex].text;
-    		$("#regiBuilding").val(buildingText);
-    		document.getElementById('regiBuilding').disabled = true;
+    		$("#company").val(buildingText);
+    		document.getElementById('company').disabled = true;
     	}
     	
     	function roomSelect(){
@@ -209,8 +251,8 @@
     		drawGrid(gubunJa.substring(1));
     		var selectedMeetingRoom = document.getElementById("meetingRoom"); 
     		var meetingRoomText = selectedMeetingRoom.options[selectedMeetingRoom.selectedIndex].text;
-    		$("#regiRoom").val(meetingRoomText);
-    		document.getElementById('regiRoom').disabled = true;
+    		$("#room").val(meetingRoomText);
+    		document.getElementById('room').disabled = true;
     	}
     	
     	function drawGrid(roomSeq){
@@ -260,25 +302,17 @@
     		if (window.roomInfoData.length != 0){
     			for (var l = 0; l < window.roomInfoData.length; l++){
     				var stdate = window.roomInfoData[l].stdate;
-            		console.log(stdate);
             		
             		var mYear = stdate.substring(0,4);
             		var mMon = stdate.substring(4,6);
             		var mDay = stdate.substring(6,8);
             		
-            		console.log(mYear);
-            		console.log(mMon);
-            		console.log(mDay);
-            		
             		var test = new Date(mYear, mMon-1, mDay);
             		var ddday = test.getDay();
-            		console.log(test);
-            		console.log(ddday);
-            		
+
             		var sttimetemp =  window.roomInfoData[l].sttime;
             		var edtimetemp =  window.roomInfoData[l].edtime;
-            		console.log(sttimetemp);
-            		console.log(edtimetemp);
+
             		var sttt1 = sttimetemp.split(':')[0];
             		var edtt1 = edtimetemp.split(':')[0];
             		console.log(sttt1);
@@ -308,16 +342,14 @@
             		
             		var stnum = 0;
             		for (var i = 9; i < 18; i){
-            			console.log(ddday + sttt1 + sttt2);
             			var con = String(ddday) + i;
             			if ( con.substring(1) >= stttime && con.substring(1) < edttime) {
-            				console.log(String(ddday) + i);
             				if (stnum == 0){
             					document.getElementById(String(ddday) + i).style.backgroundColor="yellow";
             					document.getElementById(String(ddday) + i).style.fontSize="6pt";
             					document.getElementById(String(ddday) + i).innerText = window.roomInfoData[l].booking_human;
             				} else {
-                				document.getElementById(String(ddday) + i).style.backgroundColor="yellow";	
+                				document.getElementById(String(ddday) + i).style.backgroundColor="yellow";
             				}
             				stnum = stnum + 1;
             				
@@ -328,7 +360,34 @@
     			
     		}
     		
+    	}
+    	
+    	function regiBooking() {
     		
+    		var data = new Object();
+    		data.company = document.getElementById('company').value;
+    		data.room = document.getElementById('room').value;
+    		data.booking_human = document.getElementById('booking_human').value;
+    		data.stdate = document.getElementById('stdate').value;
+    		data.sttime = document.getElementById('sttime').value;
+    		data.edtime = document.getElementById('edtime').value;
+    		data.subject = document.getElementById('subject').value;
+    		data.participant = document.getElementById('participant').value;
+    		data.room_seq = document.getElementById('meetingRoom').value.substring(1);
+    		
+    		$.ajax({
+                url: "/regiBooking",
+                method: 'POST',
+                data: data,
+                dataType: 'json',
+                async: false,
+                success: function (responseData) {
+                	roomSelect();
+                },
+                error: function () {
+                    alert('회의 등록 실패');
+                }
+            });
     	}
   
     </script>
@@ -385,46 +444,42 @@
                                 		건물
                                 	</div>
                                     <div class="col-sm-2 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="regiBuilding">
+                                        <input type="text" class="form-control form-control-user" id="company">
                                     </div>
                                     <div class="col-sm-2">
                                     	회의실
                                 	</div>
                                     <div class="col-sm-2">
-                                        <input type="text" class="form-control form-control-user" id="regiRoom">
+                                        <input type="text" class="form-control form-control-user" id="room">
                                     </div>
                                     <div class="col-sm-2">
                                     	예약자
                                 	</div>
 									<div class="col-sm-2">
-                                        <input type="text" class="form-control form-control-user" id="regiHuman">
+                                        <input type="text" class="form-control form-control-user" id="booking_human">
                                     </div>
                                 </div>
 								<div class="form-group row">
                                     <div class="col-sm-4 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="regiDate" placeholder="회의 날짜">
+                                        <input type="text" class="form-control form-control-user" id="stdate" placeholder="회의 날짜">
                                     </div>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control form-control-user" id="regiSTTime" placeholder="회의 시작 시간">
-                                        <span class="date_picker">
-                                            <label for="date_from" class="label" style="margin-right: -1px; margin-left: 10px;">기간</label>
-                                            <span class="input_date"><input type="text" class="input_text" id="date_from"></span>
-                                        </span>
+                                        <input type="text" class="form-control form-control-user" id="sttime" placeholder="회의 시작 시간">
                                     </div>
 									<div class="col-sm-4">
-                                        <input type="text" class="form-control form-control-user" id="regiEDTime" placeholder="회의 종료 시간">
+                                        <input type="text" class="form-control form-control-user" id="edtime" placeholder="회의 종료 시간">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-control-user" id="regiSubject" placeholder="주제">
+                                    <input type="text" class="form-control form-control-user" id="subject" placeholder="주제">
                                 </div>
 								<div class="form-group">
-                                    <input type="text" class="form-control form-control-user" id="regiParticipant" placeholder="참여자">
+                                    <input type="text" class="form-control form-control-user" id="participant" placeholder="참여자">
                                 </div>
                                 
                                 
                                 <hr>
-								<a href="login.html" class="btn btn-primary btn-user btn-block">
+								<a href="#" class="btn btn-primary btn-user btn-block" onClick='regiBooking()'>
                                     등록
                                 </a>
                             </form>
@@ -440,7 +495,6 @@
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
-        <script type="text/javascript" src="js/ui-common.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->

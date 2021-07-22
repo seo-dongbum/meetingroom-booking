@@ -43,6 +43,18 @@ public class BookingController {
 	public List<Booking> getRoomInfoList(@PathVariable String roomInfo) throws Exception {
 		return bookingService.getRoomInfoList(roomInfo);
 	}
+	
+	@PostMapping(path = "/regiBooking")
+	public int regiBooking(Booking booking) throws Exception {
+		System.out.println(booking);
+		return bookingService.regiBooking(booking);
+	}
+	
+	@GetMapping(path = "/deleteBooking/{seq}")
+	public int deleteBooking(@PathVariable String seq) throws Exception {
+		System.out.println(seq);
+		return bookingService.deleteBooking(seq);
+	}
 
 
 }

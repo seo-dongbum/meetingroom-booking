@@ -12,6 +12,7 @@ public class Booking {
 	private String sttime;
 	private String eddate;
 	private String edtime;
+	private String room_seq;
 	
 	
 	
@@ -19,6 +20,23 @@ public class Booking {
 		super();
 	}
 	
+
+	public Booking(String seq, String company, String room, String booking_human, String participant, String subject,
+			String stdate, String sttime, String eddate, String edtime, String room_seq) {
+		super();
+		this.seq = seq;
+		this.company = company;
+		this.room = room;
+		this.booking_human = booking_human;
+		this.participant = participant;
+		this.subject = subject;
+		this.stdate = stdate;
+		this.sttime = sttime;
+		this.eddate = eddate;
+		this.edtime = edtime;
+		this.room_seq = room_seq;
+	}
+
 	public Booking(String seq, String company, String room, String booking_human, String participant, String subject,
 			String stdate, String sttime, String eddate, String edtime) {
 		super();
@@ -94,12 +112,18 @@ public class Booking {
 	public void setEdtime(String edtime) {
 		this.edtime = edtime;
 	}
+	public String getRoom_seq() {
+		return room_seq;
+	}
+	public void setRoom_seq(String room_seq) {
+		this.room_seq = room_seq;
+	}
 
 	@Override
 	public String toString() {
 		return "Booking [seq=" + seq + ", company=" + company + ", room=" + room + ", booking_human=" + booking_human
 				+ ", participant=" + participant + ", subject=" + subject + ", stdate=" + stdate + ", sttime=" + sttime
-				+ ", eddate=" + eddate + ", edtime=" + edtime + "]";
+				+ ", eddate=" + eddate + ", edtime=" + edtime + ", room_seq=" + room_seq + "]";
 	}
 	
 }

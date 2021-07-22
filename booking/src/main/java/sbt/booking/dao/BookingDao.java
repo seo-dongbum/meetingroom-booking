@@ -27,4 +27,12 @@ public class BookingDao {
 	public List<Booking> getRoomInfoList(String roomInfo) throws Exception{
 		return sqlSession.selectList("mapper.bookingMapper.selectRoomLInfoList", roomInfo);
 	}
+	
+	public int regiBooking(Booking booking) throws Exception{
+		return sqlSession.insert("mapper.bookingMapper.insertBooking", booking);
+	}
+	
+	public int deleteBooking(String seq) throws Exception{
+		return sqlSession.delete("mapper.bookingMapper.deleteBooking", seq);
+	}
 }

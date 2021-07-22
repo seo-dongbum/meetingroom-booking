@@ -25,4 +25,12 @@ public class BookingService {
 	public List<Booking> getRoomInfoList(String roomInfo) throws Exception {
 		return bookingDao.getRoomInfoList(roomInfo.substring(1));
 	}
+	
+	public int regiBooking(Booking booking) throws Exception {
+		return bookingDao.regiBooking(booking);
+	}
+	
+	public int deleteBooking(String seq) throws Exception {		
+		return bookingDao.deleteBooking(seq);
+	}
 }

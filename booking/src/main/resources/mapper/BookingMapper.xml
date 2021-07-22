@@ -32,4 +32,16 @@
 		 ORDER BY seq
 	</select>
 	
+	<insert id="insertBooking" parameterType="sbt.booking.vo.Booking">
+		INSERT
+		  INTO room_booking.booking
+		  		(seq, company, room, booking_human, participant, subject, stdate, sttime, eddate, edtime, room_seq)
+		VALUES (nextval('room_booking.booking_seq'), #{company}, #{room}, #{booking_human}, #{participant}, #{subject}, #{stdate}, #{sttime}, #{stdate}, #{edtime}, #{room_seq})
+	</insert>
+	
+	<delete id="deleteBooking" parameterType="String">
+		DELETE FROM room_booking.booking
+		 WHERE seq = cast(#{seq} as integer)
+	</delete>
+	
 </mapper>
